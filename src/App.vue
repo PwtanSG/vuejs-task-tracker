@@ -1,6 +1,10 @@
 <template>
   <div class="container">
-    <Header :showAddTask="showAddTask" @toggle-add-task="toggleAddTask" title="Task Tracker" />
+    <Header
+      :showAddTask="showAddTask"
+      @toggle-add-task="toggleAddTask"
+      title="Task Tracker"
+    />
     <div v-if="showAddTask">
       <AddTask @add-task="addTask" />
     </div>
@@ -34,11 +38,21 @@ export default {
     toggleAddTask() {
       this.showAddTask = !this.showAddTask;
     },
-    addTask(task) {
-      this.tasks = [...this.tasks, task];
+    async addTask(task) {
+      console.log(task)
+      // this.tasks = [...this.tasks, task];
+      const res = await fetch("api/tasks", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(task),
+      });
+      const data = await res.json();
+      this.tasks = [...this.tasks, data];
     },
     deleteTask(id) {
-      console.log("app level", id);
+      // console.log("app level", id);
       if (confirm("confirm delete?")) {
         this.tasks = this.tasks.filter((task) => task.id !== id);
       }
@@ -50,28 +64,39 @@ export default {
       );
       // this.tasks = this.tasks.filter((task) => task.id !== id)
     },
+    async fetchTasks() {
+      const res = await fetch("api/tasks");
+      const data = await res.json();
+      return data;
+    },
+    async fetchTask(id) {
+      const res = await fetch(`http://localhost:5000/tasks/${id}`);
+      const data = await res.json();
+      return data;
+    },
   },
-  created() {
-    this.tasks = [
-      {
-        id: 1,
-        text: "buy Food",
-        day: "19 March 2023",
-        reminder: true,
-      },
-      {
-        id: 2,
-        text: "Pay rent",
-        day: "22 March 2023",
-        reminder: false,
-      },
-      {
-        id: 3,
-        text: "buy ticket",
-        day: "19 April 2023",
-        reminder: false,
-      },
-    ];
+  async created() {
+    this.tasks = await this.fetchTasks();
+    // this.tasks = [
+    //   {
+    //     id: 1,
+    //     text: "buy Food",
+    //     day: "19 March 2023",
+    //     reminder: true,
+    //   },
+    //   {
+    //     id: 2,
+    //     text: "Pay rent",
+    //     day: "22 March 2023",
+    //     reminder: false,
+    //   },
+    //   {
+    //     id: 3,
+    //     text: "buy ticket",
+    //     day: "19 April 2023",
+    //     reminder: false,
+    //   },
+    // ];
   },
 };
 </script>
