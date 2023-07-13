@@ -20,8 +20,8 @@ export default {
   },
   methods: {
     btnClick() {
-      // console.log(this.btnText);
-      this.$emit('toggle-add-task')
+      console.log(this.text);
+      this.$emit('btn-click')
     },
   },
 };
