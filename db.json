@@ -19,20 +19,10 @@
       "reminder": false
     },
     {
-      "id": 7680,
-      "text": "https://www.youtube.com/watch?v=zzu1dOxj6Y8",
-      "reminder": true
-    },
-    {
-      "id": 94593,
-      "text": "111",
-      "reminder": false
-    },
-    {
-      "id": 48057,
-      "text": "111",
-      "day": "2023-07-12",
-      "reminder": true
+      "text": "Test 16-7",
+      "day": "2023-07-17",
+      "reminder": true,
+      "id": 94594
     }
   ]
 }

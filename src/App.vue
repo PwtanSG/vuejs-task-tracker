@@ -38,8 +38,9 @@ export default {
     toggleAddTask() {
       this.showAddTask = !this.showAddTask;
     },
+
     async addTask(task) {
-      console.log(task)
+      console.log(task);
       // this.tasks = [...this.tasks, task];
       const res = await fetch("api/tasks", {
         method: "POST",
@@ -51,21 +52,57 @@ export default {
       const data = await res.json();
       this.tasks = [...this.tasks, data];
     },
-    deleteTask(id) {
+
+    async deleteTask(id) {
       // console.log("app level", id);
       if (confirm("confirm delete?")) {
         this.tasks = this.tasks.filter((task) => task.id !== id);
+        const res = await fetch(`api/tasks/${id}`, {
+          method: "DELETE",
+        });
+
+        // update tasks data
+        // res.status === 200
+        //   ? this.tasks = this.tasks.filter(task=>task.id = id)
+        //   : alert('Error deleting task')
+
+        res.status === 200
+          ? (this.tasks = await this.fetchTasks())
+          : alert("Error deleting task");
       }
     },
-    toggleReminder(id) {
-      console.log("toggle reminder");
+
+    async toggleReminder(id) {
+      // console.log("toggle reminder");
+      const taskToToggle = await this.fetchTask(id);
+      // console.log(taskToToggle);
+      const updateTaskReminder = {
+        ...taskToToggle,
+        reminder: !taskToToggle.reminder,
+      };
+
+      const res = await fetch(`api/tasks/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(updateTaskReminder),
+      });
+
+      //reload updated tasks
+      const data = await res.json()
+      // console.log(data)
       this.tasks = this.tasks.map((task) =>
-        task.id == id ? { ...task, reminder: !task.reminder } : task
+        task.id == id ? { ...task, reminder: !data.reminder } : task
       );
-      // this.tasks = this.tasks.filter((task) => task.id !== id)
+
+      // res.status === 200
+      //   ? (this.tasks = await this.fetchTasks())
+      //   : alert("Error updating task");
     },
+
     async fetchTasks() {
-      const res = await fetch("api/tasks");
+      const res = await fetch("api/tasks"); //refer to vue.config.js
       const data = await res.json();
       return data;
     },
@@ -75,6 +112,7 @@ export default {
       return data;
     },
   },
+  
   async created() {
     this.tasks = await this.fetchTasks();
     // this.tasks = [
