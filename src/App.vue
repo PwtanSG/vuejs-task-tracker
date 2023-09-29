@@ -13,11 +13,13 @@
       @delete-task="deleteTask"
       :tasks="tasks"
     />
+    <Footer />
   </div>
 </template>
 
 <script>
 import Header from "./components/Header";
+import Footer from "./components/Footer";
 import Tasks from "./components/Tasks";
 import AddTask from "./components/AddTask";
 
@@ -25,6 +27,7 @@ export default {
   name: "App",
   components: {
     Header,
+    Footer,
     Tasks,
     AddTask,
   },
